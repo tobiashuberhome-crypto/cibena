@@ -276,3 +276,6 @@ li::marker { color: var(--red); }
 .detail-panel[hidden] {
   display: none !important;
 }
+
+.region { padding-top: 0; }
+.region-cta { margin-top: 26px; }
