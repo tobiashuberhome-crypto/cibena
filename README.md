@@ -50,3 +50,9 @@ sudo systemctl reload nginx
 ```
 
 Für HTTPS empfiehlt sich Certbot/Let's Encrypt.
+
+## Deployment
+
+Push auf `main` → GitHub Actions (`.github/workflows/deploy.yml`) überträgt die Dateien per rsync nach `cibena.thss.online`.
+Der Schlüssel (Secret `CIBENA_SSH_KEY`) ist serverseitig auf `rrsync` im Ordner der Seite beschränkt.
+Nicht im Repo und vom Löschen ausgenommen: `.php-ini`, `.php-version`, `.well-known/`.

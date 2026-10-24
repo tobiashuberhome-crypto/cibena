@@ -1,0 +1,36 @@
+name: Deploy
+
+# Jeder Push auf main veröffentlicht die Seite auf cibena.thss.online.
+# Der Schlüssel darf auf dem Server nur per rrsync in den Ordner der Seite schreiben.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: SSH vorbereiten
+        run: |
+          install -m 700 -d ~/.ssh
+          echo "${{ secrets.CIBENA_SSH_KEY }}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          echo "${{ secrets.CIBENA_KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+
+      - name: Dateien übertragen
+        run: |
+          rsync -rlt --delete --chmod=D755,F644 \
+            --filter='P .php-ini' --filter='P .php-version' --filter='P .well-known/' \
+            --exclude='.git/' --exclude='.github/' --exclude='.gitignore' --exclude='.gitattributes' \
+            -e "ssh -i ~/.ssh/deploy_key -o IdentitiesOnly=yes" \
+            ./ tobiashuber@217.154.171.170:./
+
+      - name: Seite prüfen
+        run: curl -fsS -o /dev/null -w "HTTP %{http_code}\n" https://cibena.thss.online/
