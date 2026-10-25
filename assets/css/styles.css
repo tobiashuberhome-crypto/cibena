@@ -113,7 +113,7 @@ h4 { margin: 0 0 10px; color: var(--red); font-family: Georgia, "Times New Roman
   background-position: center;
 }
 
-.services { position: relative; padding: 0 clamp(20px, 5vw, 68px) 58px; margin-top: -22px; }
+.services { position: relative; padding: 0 clamp(20px, 5vw, 68px) 58px; }
 .wave {
   height: 74px;
   margin-inline: calc(clamp(20px, 5vw, 68px) * -1);
